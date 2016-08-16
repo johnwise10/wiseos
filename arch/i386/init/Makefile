@@ -4,12 +4,9 @@
 #
 
 # Dependencias de boot.S
-DEPENDECIES=../../../include/asm/multiboot.h ../../../include/asm/system.h \
-	    ../../../include/wiseos/linkage.h ../../../include/wiseos/config.h \
-            ../../../include/asm/segment.h ../../../include/asm/page.h
+DEPENDECIES=../../../include/asm/multiboot.h 
 
 ARCHAS = boot.o
-ARCHCC = head.o
 ARCASP = boot.asm
 
 ARCHIVES=$(ARCHAS) $(ARCHCC)
@@ -22,9 +19,6 @@ $(ARCHAS): %.o: %.asm
 
 $(ARCASP):%.asm: %.S $(DEPENDECIES)
 	$(CPP) -D__KERNEL__ $(INCLUDE) $< -o $@
-
-$(ARCHCC): %.o: %.c $(DEPENDECIES)
-	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 clean:
 	$(RM) *.o *.asm 

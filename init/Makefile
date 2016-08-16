@@ -4,7 +4,7 @@
 #
 
 # Dependecias del proceso de inicio
-DEPENDECIES=../include/asm/multiboot.h ../include/wiseos/tty.h
+DEPENDECIES=../include/asm/multiboot.h
 
 # Archivos del proceso de inicio
 ARCHIVES=main.o
@@ -16,8 +16,7 @@ $(ARCHIVES): %.o: %.c $(DEPENDECIES)
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 clean:
-	$(RM) *.o 
+	$(RM) *.o
 
-	
 
-	
+
