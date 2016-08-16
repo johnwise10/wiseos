@@ -1,5 +1,5 @@
 /* boot.S - bootstrap the kernel */
-/* Copyright (C) 1999, 2001  Free Software Foundation, Inc.
+/* Copyright (C) Juan Sabio Carvajal.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,34 +17,16 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 #define ASM_FILE        1
 #include <asm/multiboot.h>
+#include <wiseos/linkage.h>
 
-/* C symbol format. HAVE_ASM_USCORE is defined by configure. */
-#ifdef HAVE_ASM_USCORE
-# define EXT_C(sym)                     _ ## sym
-#else
-# define EXT_C(sym)                     sym
-#endif
+	.section .multiboot
 
-/* The size of our stack (16KB). */
-#define STACK_SIZE                      0x4000
-
-/* The flags for the Multiboot header. */
-#ifdef __ELF__
-# define MULTIBOOT_HEADER_FLAGS         0x00000003
-#else
-# define MULTIBOOT_HEADER_FLAGS         0x00010003
-#endif
-
-	 .text
-
-	 .globl  start, _start
-start:
-_start:
+ENTRY(start)
 	 jmp     multiboot_entry
 
 	 /* Align 32 bits boundary. */
 	 .align  4
-
+	 	
 	 /* Multiboot header. */
 multiboot_header:
 	 /* magic */
@@ -84,7 +66,7 @@ multiboot_entry:
 
 	 /* Halt. */
 	 pushl   $halt_message
-	 call    EXT_C(printf)
+	 call    EXT_C(printk)
 
 loop:   hlt
 	 jmp     loop

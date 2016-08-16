@@ -22,6 +22,16 @@
  #ifndef MULTIBOOT_HEADER
  #define MULTIBOOT_HEADER 1
  
+ /* The flags for the Multiboot header. */
+ #ifdef __ELF__
+ # define MULTIBOOT_HEADER_FLAGS         0x00000003
+ #else
+ # define MULTIBOOT_HEADER_FLAGS         0x00010003
+ #endif
+ 
+ /* The size of our stack (16KB). */
+#define STACK_SIZE                      0x4000
+ 
  /* How many bytes from the start of the file we search for the header. */
  #define MULTIBOOT_SEARCH                        8192
  

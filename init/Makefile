@@ -4,7 +4,7 @@
 #
 
 # Dependecias del proceso de inicio
-DEPENDECIES=../include/asm/multiboot.h
+DEPENDECIES=$(INCLUDEDIR)/asm/multiboot.h
 
 # Archivos del proceso de inicio
 ARCHIVES=main.o

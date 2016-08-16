@@ -5,7 +5,7 @@
 ARCHIVES=$(INIT) 
 
 # Dependencias Para el enlace entre grub y el kernel dependientes de la arquitectura
-INITARCH=init/*.S ../../include/asm/multiboot.h 
+INITARCH=init/*.S $(INCLUDEDIR)/asm/multiboot.h $(INCLUDEDIR)/wiseos/linkage.h
 
 ALL:$(ARCHIVES)
 
