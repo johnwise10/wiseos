@@ -2,95 +2,114 @@
 # Autor: Juan Sabio
 # Makefile para WiseOS.
 #
-
 # Variables que se usarán para la compilación del kernel
-TOPDIR := $(shell pwd)
-CROSS=i686-elf-
-AR=$(CROSS)ar
-AS=$(CROSS)as
-INCLUDEDIR =$(TOPDIR)/include
-INCLUDE=-I $(INCLUDEDIR)
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-ARFLAGS = rcs
-LDFLAGS = -cref -s -x -M 
-LIB=-L $(TOPDIR)/lib
-LD=$(CROSS)ld 
-CC=$(CROSS)gcc
-CPP=$(CC) -E
-RM=rm
-
-# Nombre de la imagen del kernel
-IMAGE=wsImage
+TOPDIR 		   := $(shell pwd)
 
 # Arquitectura a compilar
-MACHINE=i386
+MACHINE        := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+            
+# Directorios include
+INCLUDEDIR 	    = $(TOPDIR)/include
+INCLUDEDIRARC   = $(TOPDIR)/arch/$(MACHINE)/include
 
-# Datos depedientes del kernel a compilar 
-ARCH=arch/$(MACHINE)
+
+# Herramientas de compilación
+CROSS_COMPILE	= i686-elf-
+AS				= $(CROSS_COMPILE)as
+LD				= $(CROSS_COMPILE)ld 
+CC				= $(CROSS_COMPILE)gcc
+CPP				= $(CC) -E
+AR				= $(CROSS_COMPILE)ar
+NM              = $(CROSS_COMPILE)nm
+STRIP           = $(CROSS_COMPILE)strip
+OBJCOPY         = $(CROSS_COMPILE)objcopy
+OBJDUMP         = $(CROSS_COMPILE)objdump
+
+
+# Flags de configuración
+INCLUDE			= -I $(INCLUDEDIR) -I $(INCLUDEDIRARC)
+CFLAGS 			= -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+ARFLAGS 		= rcs
+LDFLAGS 		= -cref -s -x -M 
+LIB				= -L $(TOPDIR)/lib
+
+# Comandos de Sistema Operativo
+RM				= rm
+
+# Nombre de la imagen del kernel
+IMAGE			= wsImage
 
 # Subsistema init
-INITF=init.o
-INIT=init/$(INITF)
-
-# Subsistema kernel
-KERNELF=kernel.o
-KERNEL=kernel/$(KERNELF) 
-
-# Libreria del sistema
-LIBKCF=libkc.a
-LIBKC=lib/$(LIBKCF)
-
-# Subsistema drivers
-DRIVERSF=modules.o
-DRIVERS=drivers/$(DRIVERSF)
-
-# Dependencias Para el enlace entre grub y el kernel dependientes de la arquitectura
-INITARCH=$(ARCH)/init/*.S include/asm/multiboot.h
-
-# Dependencias Para el programa de inicio del kernel
-INITSRC=init/*.c include/asm/multiboot.h 
-
-# Depencias de la imagen del kernel
-ARCHIVES=$(ARCH)/$(INIT) $(INIT) $(KERNEL) $(DRIVERS)
+INIDIR 			= init/
+INITF			= init.o
+INIT			= $(INIDIR)$(INITF)
+INTSRC		   += $(INIDIR)
 
 # Dependecias del kernel
-KERNSRC=kernel/*.c $(INCLUDEDIR)/wiseos/tty.h $(INCLUDEDIR)/stdarg.h $(INCLUDEDIR)/stddef.h \
-        $(INCLUDEDIR)/wiseos/kernel.h
+KERNDIR			= kernel/
+KERNELF			= kernel.o
+KERNEL			= $(KERNDIR)$(KERNELF) 
+KERNSRC 	   += $(KERNDIR)
 
-# Dependecias para la libreria del kernel
-LIBSRC=lib/*.c lib/*.c $(INCLUDEDIR)/stack.h $(INCLUDEDIR)/queue.h $(INCLUDEDIR)/asm/string.h \
-       $(INCLUDEDIR)/stdarg.h  $(INCLUDEDIR)/wiseos/ptrace.h
-       
-# Dependecias de los modulos del kernel
-MODSRC=include/wiseos/tty.h include/wiseos/kernel.h drivers/video/console/*.c \
-       drivers/video/console/*.h       
+# Libreria del sistema
+LIBDIR			= lib/
+LIBKCF			= libkc.a
+LIBKC			= $(LIBDIR)$(LIBKCF)
+LIBSRC 		   += $(LIBDIR)
 
-export AS INCLUDE INCLUDEDIR LD CC CPP CFLAGS RM AR ARFLAGS INIT INITF LIBKC LIBKCF KERNELF DRIVERSF
+# Subsistema drivers
+DRIDIR 			= drivers/
+DRIVERSF		= modules.o
+DRIVERS			= $(DRIDIR)$(DRIVERSF)
+DRVSRC 		   += $(DRIDIR)
+DRVSRC 		   += $(DRIDIR)/video
+DRVSRC 		   += $(DRIDIR)/video/console
+
+
+# Datos depedientes de la arquitectura a compilar (Init)
+ARCHDIR			= arch/$(MACHINE)
+ARCHINIDIR 		= arch/$(MACHINE)/$(INIDIR)
+ARCHINITF		= init.o
+ARCHINIT		= $(ARCHINIDIR)$(ARCHINITF)
+ARCHINTSRC	   += $(ARCHINIDIR )
+
+# Dependencias de includes       
+HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
+        $(INCLUDEDIRARC)/asm/*.h  $(INCLUDEDIR)/*.h
+        
+        
+# Depencias de la imagen del kernel
+ARCHIVES=$(ARCHINIT) $(INIT) $(KERNEL) $(DRIVERS)
+    
+
+export INCLUDEDIR INCLUDEDIRARC AS LD CC CPP AR NM STRIP OBJCOPY \
+       OBJDUMP INCLUDE CFLAGS ARFLAGS LDFLAGS LIB HDRSRC INITF \
+       LIBKCF KERNELF DRIVERSF 
 
 all: $(IMAGE)
 
 $(IMAGE):$(ARCHIVES) $(LIBKC)
 	$(LD) -T link.ld -o $(IMAGE) $(ARCHIVES) $(LIB) -lkc $(LDFLAGS) > System.map
 
-$(ARCH)/$(INIT): $(INITARCH)
-	$(MAKE) -C $(ARCH)
+$(ARCHINIT): $(ARCHINTSRC) $(HDRSRC)
+	$(MAKE) -C $(ARCHDIR)
 
-$(INIT): $(INITSRC)
-	$(MAKE) -C init
+$(INIT): $(INTSRC) $(HDRSRC)
+	$(MAKE) -C $(INIDIR)
 
-$(KERNEL): $(KERNSRC)
-	$(MAKE) -C kernel
+$(KERNEL): $(KERNSRC) $(HDRSRC)
+	$(MAKE) -C $(KERNDIR)
 		
-$(LIBKC): $(LIBSRC) 
-	$(MAKE) -C lib 	
+$(LIBKC): $(LIBSRC) $(HDRSRC)
+	$(MAKE) -C $(LIBDIR)
 
-$(DRIVERS): $(MODSRC)
-	$(MAKE) -C drivers	
+$(DRIVERS): $(DRVSRC) $(HDRSRC)
+	$(MAKE) -C $(DRIDIR)
 
 clean:  
-	$(MAKE) clean -C $(ARCH)
-	$(MAKE) clean -C init
-	$(MAKE) clean -C kernel
-	$(MAKE) clean -C lib
-	$(MAKE) clean -C drivers
+	$(MAKE) clean -C $(ARCHDIR)
+	$(MAKE) clean -C $(INIDIR)
+	$(MAKE) clean -C $(KERNDIR)
+	$(MAKE) clean -C $(LIBDIR)
+	$(MAKE) clean -C $(DRIDIR)
 	$(RM)   wsImage *.map

@@ -2,27 +2,26 @@
 # Autor: Juan Sabio
 # Makefile para la compilación del modulo video
 #
-# Dependencias del modulo
-DEPENDENCIES=console/*.c console/*.h ../../include/wiseos/kernel.h ../../include/wiseos/console.h \
-	    ../../include/asm/io.h $(INCLUDEDIR)/asm/system.h
 
 # Driver para consola
+CONSOLEDIR=console/
 CONSOLEF=console.o
-CONSOLE=console/$(CONSOLEF)
+CONSOLE=$(CONSOLEDIR)$(CONSOLEF)
+
 
 # Exportamos los nombres de los drivers a generar
 export CONSOLEF
 
 # Archivos del modulo
-ARCHIVES=console/console.o
+ARCHIVES=$(CONSOLE)
 
-$(VIDEOF): $(ARCHIVES) $(DEPENDENCIES)
+$(VIDEOF): $(ARCHIVES) 
 	$(LD) -r -o $(VIDEOF) $(ARCHIVES)	
 
-$(CONSOLE): $(DEPENDENCIES)
-	$(MAKE) -C console
+$(CONSOLE): $(CONSOLEDIR) $(INCLUDEDIR)/wiseos/*.h
+	$(MAKE) -C $(CONSOLEDIR)
 
 clean:	
 	$(RM) *.o
-	$(MAKE) clean -C console
+	$(MAKE) clean -C $(CONSOLEDIR)
 	

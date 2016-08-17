@@ -4,8 +4,8 @@
 #
 
 # Dependencias del modulo
-DEPENDENCIES=../../../include/wiseos/kernel.h ../../../include/wiseos/console.h \
-	    ../../../include/asm/io.h  ./*.h $(INCLUDEDIR)/asm/system.h
+DEPENDENCIES=$(INCLUDEDIR)/wiseos/kernel.h $(INCLUDEDIR)/wiseos/console.h \
+			 $(INCLUDEDIR)/asm/io.h  ./*.h $(INCLUDEDIR)/asm/system.h
 
 # Archivos del modulo
 ARCHIVES=vgacons.o

@@ -2,30 +2,26 @@
 # Autor: Juan Sabio
 # Makefile para los modulos del kernel
 #
-VIDEOF=video.o
-VIDEO=video/$(VIDEOF)
+
+# Driver VGA video
+VIDEODIR		= video/
+VIDEOF			= video.o
+VIDEO			= $(VIDEODIR)$(VIDEOF)
+VIDEOSRC 	   += $(VIDEODIR)
+VIDEOSRC       += $(VIDEODIR)/console
 
 
-ARCHIVES= $(VIDEO)
-
-
-#Depencias para el modulo tty del kernel
-CHRSRC=char/*.c  $(INCLUDEDIR)/wiseos/tty.h $(INCLUDEDIR)/wiseos/kernel.h  \
-                 $(INCLUDEDIR)/console.h
-
-#Dependendicas  para el modulo video del kernel
-VIDEOSRC=video/console/*.c video/console/*.h  $(INCLUDEDIR)/wiseos/kernel.h  $(INCLUDEDIR)/wiseos/console.h \
-	 $(INCLUDEDIR)/asm/io.h  $(INCLUDEDIR)/asm/system.h
+ARCHIVES += $(VIDEO)
 
 export VIDEOF 
 
-$(DRIVERSF): $(ARCHIVES) 
+$(DRIVERSF): $(ARCHIVES)  
 	$(LD) -r -o $(DRIVERSF) $(ARCHIVES)	
 
-$(VIDEO): $(VIDEOSRC)
-	$(MAKE) -C video
+$(VIDEO): $(VIDEOSRC) $(HDRSRC)
+	$(MAKE) -C $(VIDEODIR)
 	
 clean:
 	$(RM) *.o
-	$(MAKE) clean -C video
+	$(MAKE) clean -C $(VIDEODIR)
 	

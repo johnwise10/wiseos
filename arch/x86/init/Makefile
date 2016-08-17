@@ -4,7 +4,7 @@
 #
 
 # Dependencias de boot.S
-DEPENDECIES=../../../include/asm/multiboot.h 
+DEPENDECIES=$(INCLUDEDIR)/asm/multiboot.h 
 
 ARCHAS = boot.o
 ARCASP = boot.asm

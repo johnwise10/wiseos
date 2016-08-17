@@ -27,15 +27,7 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=4
-FILE_NAME_0=0;Make;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2FMakefile;0;4
-FILE_NAME_1=635;Make;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Fdrivers%2FMakefile;0;4
-FILE_NAME_2=0;Make;0;EISO-8859-1;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Fdrivers%2Fvideo%2FMakefile;0;4
-FILE_NAME_3=0;Make;0;EISO-8859-1;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Fdrivers%2Fvideo%2Fconsole%2FMakefile;0;4
-FILE_NAME_4=258;C;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Finit%2Fmain.c;0;4
-FILE_NAME_5=353;Make;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Finit%2FMakefile;0;4
-FILE_NAME_6=1777;None;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2Fprojects%2Fwiseos%2Farch%2Fi386%2Finit%2Fboot.S;0;4
-FILE_NAME_7=100;C;0;EUTF-8;1;1;0;%2Fhome%2Fjsabio%2FDesktop%2Fso%2Fso%2Fnucleo%2Fv3%2Fkernel%2Fdrivers%2Fchar%2Ftty_io.c;0;4
+current_page=-1
 
 [VTE]
 last_dir=/home/jsabio
