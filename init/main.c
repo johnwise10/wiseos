@@ -26,7 +26,10 @@ void __init cmain (unsigned long magic, unsigned long addr)
   
   show_multiboot_info(magic,addr);
  
-
+  trap_init();
+  init_IRQ();
+  init_keyboard();
+  
   printk("Hello World WiseOS\n");
 
   int_enable();
