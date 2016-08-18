@@ -14,7 +14,7 @@
         // Física aprovechamos esta sección para iniciar la paginación y continuar
         // En la sección .text que es donde se encuentra el nucleo del SO, en la 
         // dirección 0xC0000000 aunque realmente este en la dirección fisica 0x100000 
-	.section .setup
+	.section .text.setup
 
 ENTRY(start)
 	jmp	multiboot_entry

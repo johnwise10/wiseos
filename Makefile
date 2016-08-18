@@ -89,12 +89,12 @@ all: $(IMAGE)
 
 $(IMAGE): $(WSOBJ)
 	$(OBJ) $(ELF) $(WSOBJ) $(IMAGE)
-	objcopy $(IMAGE) --change-section-lma .text-0xBFF00000
-	objcopy $(IMAGE) --change-section-lma .init.text-0xBFF00000
-	objcopy $(IMAGE) --change-section-lma .spinlock.text-0xBFF00000
-	objcopy $(IMAGE) --change-section-lma .rdata-0xBFF00000
-	objcopy $(IMAGE) --change-section-lma .data-0xBFF00000
-	objcopy $(IMAGE) --change-section-lma .bss-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .text-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .init.text-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .spinlock.text-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .rdata-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .data-0xBFF00000
+#	objcopy $(IMAGE) --change-section-lma .bss-0xBFF00000
 
 $(WSOBJ):$(ARCHIVES) $(LIBKC)
 	$(LD) -T link.ld -o $(WSOBJ) $(ARCHIVES) $(LIB) -lkc $(LDFLAGS) > System.map

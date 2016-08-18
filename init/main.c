@@ -14,7 +14,7 @@ void init();
 void __init cmain (unsigned long magic, unsigned long addr)
 {
 
-  int_disable();
+  //int_disable();
   tty_init();
   // Comprobamos si hemos arrancado con un Multiboot Boot loader. 
   if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
@@ -22,7 +22,7 @@ void __init cmain (unsigned long magic, unsigned long addr)
       printk ("Invalid magic number: 0x%x\n", (unsigned) magic);
       return;
     }
-  
+/*  
   mem_init((u32)addr); 
   trap_init();
   init_IRQ();
@@ -30,15 +30,14 @@ void __init cmain (unsigned long magic, unsigned long addr)
 
   
   printk("0x%x\n",pgdir[0]);
-
-  printk("0x%x\n",pgdir[768]);
+ printk("0x%x\n",pgdir[768]);
   
   printk("0x%x\n",pgt1[256]);
   printk("0x%x\n",pgt2[4]);
   printk("0x%x\n",cmain);
   printk("0x%x\n",&pgdir);
   printk("0x%x\n",&pgt3);
-  
+  */
  /*int *pg;
   pg = 0x00101000;
   printk("0x%x\n",pg[0]);
@@ -49,7 +48,7 @@ void __init cmain (unsigned long magic, unsigned long addr)
   num = 0xD0000000;
   *num = 55;
   printk("0x%x\n",*num);*/
-  int_enable();
+  //int_enable();
   init();
   panic("Error Fatal..");
 }    
