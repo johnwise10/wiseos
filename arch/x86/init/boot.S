@@ -19,7 +19,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #include <asm/multiboot.h>
 #include <wiseos/linkage.h>
 
-	.section .multiboot
+	.section .text.multiboot
 
 ENTRY(start)
 	 jmp     multiboot_entry
