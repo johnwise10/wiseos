@@ -1,6 +1,8 @@
 #ifndef _WISEOS_LINKAGE_H
 #define _WISEOS_LINKAGE_H
 
+#include <asm/linkage.h>
+
 #ifndef __ALIGN
 #define __ALIGN		.align 4,0x90
 #define __ALIGN_STR	".align 4,0x90"

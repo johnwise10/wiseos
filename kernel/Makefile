@@ -4,7 +4,7 @@
 #
 
 # Archivos del kernel
-ARCHIVES=printk.o panic.o console.o 
+ARCHIVES=printk.o panic.o console.o softirq.o spinlock.o
 
 $(KERNELF): $(ARCHIVES) 
 	$(LD) -r -o $(KERNELF) $(ARCHIVES)

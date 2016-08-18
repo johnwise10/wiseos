@@ -28,7 +28,7 @@ OBJDUMP         = $(CROSS_COMPILE)objdump
 
 # Flags de configuración
 INCLUDE			= -I $(INCLUDEDIR) -I $(INCLUDEDIRARC)
-CFLAGS 			= -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS 			= -std=gnu99 -ffreestanding -O2 -Wall 
 ARFLAGS 		= rcs
 LDFLAGS 		= -cref -s -x -M 
 LIB				= -L $(TOPDIR)/lib
@@ -71,7 +71,13 @@ ARCHDIR			= arch/$(MACHINE)
 ARCHINIDIR 		= arch/$(MACHINE)/$(INIDIR)
 ARCHINITF		= init.o
 ARCHINIT		= $(ARCHINIDIR)$(ARCHINITF)
-ARCHINTSRC	   += $(ARCHINIDIR )
+ARCHINTSRC	   += $(ARCHINIDIR)
+
+# Datos depedientes de la arquitectura a compilar (Kernel)
+ARCHKERNDIR 	= arch/$(MACHINE)/$(KERNDIR)
+ARCHKERNF		= kernel.o
+ARCHKERN		= $(ARCHKERNDIR)$(ARCHKERNF)
+
 
 # Dependencias de includes       
 HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
@@ -79,7 +85,7 @@ HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
         
         
 # Depencias de la imagen del kernel
-ARCHIVES=$(ARCHINIT) $(INIT) $(KERNEL) $(DRIVERS)
+ARCHIVES=$(ARCHINIT) $(ARCHKERN) $(INIT) $(KERNEL) $(DRIVERS)
     
 
 export INCLUDEDIR INCLUDEDIRARC AS LD CC CPP AR NM STRIP OBJCOPY \

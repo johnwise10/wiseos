@@ -3,17 +3,13 @@
 # Makefile para la compilación del modulo console
 #
 
-# Dependencias del modulo
-DEPENDENCIES=$(INCLUDEDIR)/wiseos/kernel.h $(INCLUDEDIR)/wiseos/console.h \
-			 $(INCLUDEDIR)/asm/io.h  ./*.h $(INCLUDEDIR)/asm/system.h
-
 # Archivos del modulo
 ARCHIVES=vgacons.o
 
 $(CONSOLEF):$(ARCHIVES)
 	$(LD) -r -o $(CONSOLEF) $(ARCHIVES)
 
-$(ARCHIVES): %.o: %.c $(DEPENDENCIES)
+$(ARCHIVES): %.o: %.c $(HDRSRC)
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 clean:	

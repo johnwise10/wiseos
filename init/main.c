@@ -2,6 +2,7 @@
 #include <wiseos/kernel.h>
 #include <wiseos/tty.h>
 #include <wiseos/init.h>
+#include <wiseos/interrupt.h>
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
  
@@ -13,8 +14,9 @@ void show_multiboot_info (unsigned long magic, unsigned long addr);
 void __init cmain (unsigned long magic, unsigned long addr)
 {
 	
-  //tty_init();
-  console_init();
+  int_disable();
+  tty_init();
+  //console_init();
   // Comprobamos si hemos arrancado con un Multiboot Boot loader. 
   if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
     {
@@ -27,7 +29,7 @@ void __init cmain (unsigned long magic, unsigned long addr)
 
   printk("Hello World WiseOS\n");
 
-
+  int_enable();
   init();
   panic("Error Fatal..");
 }    

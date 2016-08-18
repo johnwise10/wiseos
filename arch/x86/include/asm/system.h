@@ -57,11 +57,11 @@ typedef struct idt_descr_t{
 
 typedef struct gdt_descr_t {
 	u16 limite1;			// Limite 0:15
-	u16 base1;			// Base 0:15
-	u8  base2;			// Base 16:23
-	u8  atr1;			// P, DPL(2bits),S, Tipo(4bits)
-	u8  atr2;			// G, D/B, 0, AVL, Limite 16:19 (4bits) 
-	u8  base3;			// Base  24:31
+	u16 base1;				// Base 0:15
+	u8  base2;				// Base 16:23
+	u8  atr1;				// P, DPL(2bits),S, Tipo(4bits)
+	u8  atr2;				// G, D/B, 0, AVL, Limite 16:19 (4bits) 
+	u8  base3;				// Base  24:31
 } gdt_descr_t;
 
 extern idt_descr_t idt[IDT_ENTRIES];
