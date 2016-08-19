@@ -27,3 +27,4 @@ $(KERNEL): $(KERNSRC) $(HDRSRC)
 clean:
 	$(MAKE) clean -C $(INIDIR) 
 	$(MAKE) clean -C $(KERNDIR)	
+	$(RM)   *.o
