@@ -9,18 +9,14 @@ INIT			= $(INIDIR)$(INITF)
 INTSRC		   += $(INIDIR)
 
 # Subsistema kernel
-INIDIR 			= init/
-INIT			= $(INIDIR)$(INITF)
-INTSRC		   += $(INIDIR)
-
-# Dependecias del kernel
 KERNDIR			= kernel/
 KERNEL			= $(KERNDIR)$(KERNELF) 
 KERNSRC 	   += $(KERNDIR)
 
 ARCHIVES=$(INIT) $(KERNEL)
 
-ALL:$(ARCHIVES)
+$(ARCHF): $(ARCHIVES)  
+	$(LD) -r -o $(ARCHF) $(ARCHIVES)	
 
 $(INIT): $(INTSRC) $(HDRSRC)
 	$(MAKE) -C $(INIDIR)

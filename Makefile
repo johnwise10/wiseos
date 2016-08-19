@@ -65,19 +65,11 @@ DRVSRC 		   += $(DRIDIR)
 DRVSRC 		   += $(DRIDIR)/video
 DRVSRC 		   += $(DRIDIR)/video/console
 
-
-# Datos depedientes de la arquitectura a compilar (Init)
-ARCHDIR			= arch/$(MACHINE)
-ARCHINIDIR 		= arch/$(MACHINE)/$(INIDIR)
-ARCHINITF		= init.o
-ARCHINIT		= $(ARCHINIDIR)$(ARCHINITF)
-ARCHINTSRC	   += $(ARCHINIDIR)
-
-# Datos depedientes de la arquitectura a compilar (Kernel)
-ARCHKERNDIR 	= arch/$(MACHINE)/$(KERNDIR)
-ARCHKERNF		= kernel.o
-ARCHKERN		= $(ARCHKERNDIR)$(ARCHKERNF)
-
+# Datos depedientes de la arquitectura a compilar
+ARCHDIR			= arch/$(MACHINE)/
+ARCHF		    = arch.o
+ARCH		    = $(ARCHDIR)$(ARCHF)
+ARCHSRC	       += $(ARCHDIR	)
 
 # Dependencias de includes       
 HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
@@ -85,19 +77,19 @@ HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
         
         
 # Depencias de la imagen del kernel
-ARCHIVES=$(ARCHINIT) $(ARCHKERN) $(INIT) $(KERNEL) $(DRIVERS)
+ARCHIVES=$(ARCH) $(INIT) $(KERNEL) $(DRIVERS)
     
 
 export INCLUDEDIR INCLUDEDIRARC AS LD CC CPP AR NM STRIP OBJCOPY \
        OBJDUMP INCLUDE CFLAGS ARFLAGS LDFLAGS LIB HDRSRC INITF \
-       LIBKCF KERNELF DRIVERSF 
+       LIBKCF KERNELF DRIVERSF ARCHF
 
 all: $(IMAGE)
 
 $(IMAGE):$(ARCHIVES) $(LIBKC)
 	$(LD) -T link.ld -o $(IMAGE) $(ARCHIVES) $(LIB) -lkc $(LDFLAGS) > System.map
 
-$(ARCHINIT): $(ARCHINTSRC) $(HDRSRC)
+$(ARCH): $(ARCHSRC) $(HDRSRC)
 	$(MAKE) -C $(ARCHDIR)
 
 $(INIT): $(INTSRC) $(HDRSRC)

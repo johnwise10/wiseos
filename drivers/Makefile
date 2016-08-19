@@ -16,9 +16,7 @@ CHARF			= char.o
 CHAR			= $(CHARDIR)$(CHARF)
 CHARSRC 	   += $(CHARDIR)
 
-
 ARCHIVES += $(VIDEO) $(CHAR) 
-
 
 export VIDEOF CHARF
 

@@ -31,6 +31,17 @@ void __init cmain (unsigned long magic, unsigned long addr)
   init_keyboard();
   
   printk("Hello World WiseOS\n");
+  
+  printk("0x%x\n",cmain);
+/*  printk("0x%x\n",pgdir[0]);
+
+  printk("0x%x\n",pgdir[768]);
+  
+  printk("0x%x\n",pgt1[256]);
+  printk("0x%x\n",pgt2[4]);
+  printk("0x%x\n",cmain);
+  printk("0x%x\n",&pgdir);
+  printk("0x%x\n",&pgt3);  */
 
   int_enable();
   init();
