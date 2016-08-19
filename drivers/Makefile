@@ -32,4 +32,5 @@ $(CHAR): $(CHARSRC) $(HDRSRC)
 clean:
 	$(RM) *.o
 	$(MAKE) clean -C $(VIDEODIR)
+	$(MAKE) clean -C $(CHARDIR)
 	

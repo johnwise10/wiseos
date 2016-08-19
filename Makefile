@@ -45,6 +45,12 @@ INITF			= init.o
 INIT			= $(INIDIR)$(INITF)
 INTSRC		   += $(INIDIR)
 
+# Subsistema de Memoria
+MMDIR 			= mm/
+MMF				= mm.o
+MM				= $(MMDIR)$(MMF)
+MMSRC		   += $(MMDIR)
+
 # Dependecias del kernel
 KERNDIR			= kernel/
 KERNELF			= kernel.o
@@ -77,12 +83,12 @@ HDRSRC= $(INCLUDEDIR)/asm/*.h  $(INCLUDEDIR)/wiseos/*.h   \
         
         
 # Depencias de la imagen del kernel
-ARCHIVES=$(ARCH) $(INIT) $(KERNEL) $(DRIVERS)
+ARCHIVES=$(ARCH) $(INIT) $(MM) $(KERNEL) $(DRIVERS)
     
 
 export INCLUDEDIR INCLUDEDIRARC AS LD CC CPP AR NM STRIP OBJCOPY \
        OBJDUMP INCLUDE CFLAGS ARFLAGS LDFLAGS LIB HDRSRC INITF \
-       LIBKCF KERNELF DRIVERSF ARCHF
+       LIBKCF KERNELF DRIVERSF ARCHF MMF
 
 all: $(IMAGE)
 
@@ -94,6 +100,9 @@ $(ARCH): $(ARCHSRC) $(HDRSRC)
 
 $(INIT): $(INTSRC) $(HDRSRC)
 	$(MAKE) -C $(INIDIR)
+	
+$(MM): $(MMSRC) $(HDRSRC)
+	$(MAKE) -C $(MMDIR)	
 
 $(KERNEL): $(KERNSRC) $(HDRSRC)
 	$(MAKE) -C $(KERNDIR)
@@ -107,6 +116,7 @@ $(DRIVERS): $(DRVSRC) $(HDRSRC)
 clean:  
 	$(MAKE) clean -C $(ARCHDIR)
 	$(MAKE) clean -C $(INIDIR)
+	$(MAKE) clean -C $(MMDIR)
 	$(MAKE) clean -C $(KERNDIR)
 	$(MAKE) clean -C $(LIBDIR)
 	$(MAKE) clean -C $(DRIDIR)

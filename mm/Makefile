@@ -4,10 +4,10 @@
 #
 
 # Archivos del kernel
-ARCHIVES=printk.o panic.o console.o softirq.o spinlock.o
+ARCHIVES=memory.o kmalloc.o
 
-$(KERNELF): $(ARCHIVES) 
-	$(LD) -r -o $(KERNELF) $(ARCHIVES)
+$(MMF): $(ARCHIVES) 
+	$(LD) -r -o $(MMF) $(ARCHIVES)
 
 $(ARCHIVES): %.o: %.c $(HDRSRC)
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
