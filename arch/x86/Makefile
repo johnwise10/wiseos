@@ -13,7 +13,13 @@ KERNDIR			= kernel/
 KERNEL			= $(KERNDIR)$(KERNELF) 
 KERNSRC 	   += $(KERNDIR)
 
-ARCHIVES=$(INIT) $(KERNEL)
+# Subsistema de Memoria
+MMDIR 			= mm/
+MM				= $(MMDIR)$(MMF)
+MMSRC		   += $(MMDIR)
+
+
+ARCHIVES=$(INIT) $(KERNEL) $(MM)
 
 $(ARCHF): $(ARCHIVES)  
 	$(LD) -r -o $(ARCHF) $(ARCHIVES)	
@@ -23,8 +29,12 @@ $(INIT): $(INTSRC) $(HDRSRC)
 	
 $(KERNEL): $(KERNSRC) $(HDRSRC)
 	$(MAKE) -C $(KERNDIR)	
+	
+$(MM): $(MMSRC) $(HDRSRC)
+	$(MAKE) -C $(MMDIR)		
 
 clean:
 	$(MAKE) clean -C $(INIDIR) 
 	$(MAKE) clean -C $(KERNDIR)	
+	$(MAKE) clean -C $(MMDIR)
 	$(RM)   *.o

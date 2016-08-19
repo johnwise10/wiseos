@@ -2,7 +2,10 @@
 #include <wiseos/kernel.h>
 #include <wiseos/tty.h>
 #include <wiseos/init.h>
+#include <wiseos/traps.h>
 #include <wiseos/interrupt.h>
+#include <wiseos/memory.h>
+#include <wiseos/page.h>
 
 //   Proceso inicial nulo del kernel     
 void init();
@@ -14,7 +17,7 @@ void __init cmain (unsigned long magic, unsigned long addr)
 	
   int_disable();
   tty_init();
-  //console_init();
+  
   // Comprobamos si hemos arrancado con un Multiboot Boot loader. 
   if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
     {
@@ -22,8 +25,7 @@ void __init cmain (unsigned long magic, unsigned long addr)
       return;
     }
   
- // show_multiboot_info(magic,addr);
-  
+ 
   mem_init((u32)addr); 
   
   trap_init();
@@ -32,17 +34,15 @@ void __init cmain (unsigned long magic, unsigned long addr)
   
   printk("Hello World WiseOS\n");
   
-  printk("0x%x\n",cmain);
-  
-  /*printk("0x%x\n",pgdir[0]);
 
-  printk("0x%x\n",pgdir[768]);
   
-  printk("0x%x\n",pgt1[256]);
-  printk("0x%x\n",pgt2[4]);
-  printk("0x%x\n",cmain);
-  printk("0x%x\n",&pgdir);
-  printk("0x%x\n",&pgt3);  */
+  printk("pgdir[0]:   0x%x\n",pgdir[0]);
+  printk("pgdir[768]: 0x%x\n",pgdir[768]);
+  printk("pgt1[256]:  0x%x\n",pgt1[256]);
+  printk("pgt2[4]:    0x%x\n",pgt2[4]);
+  printk("cmain:      0x%x\n",cmain);
+  printk("&pgdir:     0x%x\n",&pgdir);
+  printk("&pgt3:      0x%x\n",&pgt3); 
 
   int_enable();
   init();

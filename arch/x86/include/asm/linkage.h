@@ -3,7 +3,7 @@
 
 // Offset para iniciar el nucleo en la direccion 0xC0000000
 // 0x00100000 + 0xBFF00000 = 0xC0000000
-#define PAGE_OFFSET	0xBFF00000 
+#define PAGE_OFFSET	0x00000000 
 // El tamaño de la sección setup con direcciones  fisicias 
 // iguales a las virtuales 0x100000
 #define SECTION_SETUP_SIZE 0x100

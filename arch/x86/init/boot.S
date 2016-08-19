@@ -49,21 +49,46 @@ multiboot_header:
 	 .long   multiboot_entry
 #endif /* ! __ELF__ */
 
-.text
 
 multiboot_entry:
+	// Iniciamos el puntero de PILA  
+	movl	$(stack + STACK_SIZE), %esp
+
+	// Reseteamos EFLAGS
+	pushl	$0
+	popf
+
+	// Guardamos el puntero a de la "Multiboot information structure"
+	movl %ebx,mbi
+       
+        // Guardamos el valor Magico
+	movl %eax,mva
+	
+// Datos para inicializar el nucleo de forma adecuada
+mbi: 	.long  0x00000000
+mva: 	.long  0x00000000
+
+//	Aqui empieza el codigo en la dirección logica 0xC0000000
+.org SECTION_SETUP_SIZE
+
+.text
+
+kernel:
 	 /* Initialize the stack pointer. */
-	 movl    $(stack + STACK_SIZE), %esp
+	// movl    $(stack + STACK_SIZE), %esp
 	 
 	 /* Reset EFLAGS. */
-	 pushl   $0
-	 popf
+	// pushl   $0
+	// popf
 
-	 /* Push the pointer to the Multiboot information structure. */
-	 pushl   %ebx
-	 /* Push the magic value. */
-	 pushl   %eax
+	// Ponemos el puntero de "Multiboot information structure" en la pila.  
+	movl (mbi),%ebx	
+	pushl %ebx
 
+	// Ponemos el "magic value" en la pila. 
+	movl (mva),%eax
+	pushl %eax
+	 	
 	 // Fijamos la IDT y La GDT
 	 call EXT_C(setup_descriptors)
 
@@ -76,13 +101,6 @@ multiboot_entry:
 
 loop:   hlt
 	 jmp     loop
-
-halt_message:
-	 .asciz  "Halted."
-
-	 /* Our stack area. */
-	 .comm   stack, STACK_SIZE
-	 
 
 // Carga la tabla global de descriptores (GDT)
 ENTRY(EXT_C(setup_gdt))
@@ -124,3 +142,37 @@ rp_sidt:
 	jne rp_sidt
 	lidt idt_descr
 	ret	 
+	
+.data	
+// Entrada del directorio de paginas
+.org 0x1000-SECTION_SETUP_SIZE
+ENTRY(EXT_C(pgdir))
+
+	.long 0x00102007 // Entrada 0 apuntando a la pagina 1
+	.fill 768-1,4,0
+	/* default: 767 entries */
+	.long 0x00103007 // Entrada 768 apuntado a pagina 2 direccion 0XC0000000
+	/* default: 254 entries */
+	.fill 256-1,4,0
+
+// Pagina 1 para el mapeo 1:1 de las direcciones fisicas
+.org 0x2000-SECTION_SETUP_SIZE
+ENTRY(EXT_C(pgt1))
+.fill 1024-1,4,0
+// Pagina 2 para el mapeo del kernel en 0xC0000000
+.org 0x3000-SECTION_SETUP_SIZE
+ENTRY(EXT_C(pgt2))
+.fill 1024-1,4,0
+// Tabla para los datos no inicializados del nucleo
+.org 0x4000-SECTION_SETUP_SIZE
+ENTRY(EXT_C(pgt3))
+.fill 1024-1,4,0
+// Pagina Nula
+.org 0x5000-SECTION_SETUP_SIZE
+ENTRY(empty_zero_page)
+halt_message:
+	 .asciz  "Halted."
+
+.bss
+	 /* Our stack area. */
+	 .comm   stack, STACK_SIZE
