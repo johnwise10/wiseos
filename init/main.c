@@ -38,7 +38,9 @@ void __init cmain (unsigned long magic, unsigned long addr)
   
   printk("pgdir[0]:   0x%x\n",pgdir[0]);
   printk("pgdir[768]: 0x%x\n",pgdir[768]);
+  printk("pgt1[1]:    0x%x\n",pgt1[1]);
   printk("pgt1[256]:  0x%x\n",pgt1[256]);
+  printk("pgt2[1]:    0x%x\n",pgt2[1]);
   printk("pgt2[4]:    0x%x\n",pgt2[4]);
   printk("cmain:      0x%x\n",cmain);
   printk("&pgdir:     0x%x\n",&pgdir);

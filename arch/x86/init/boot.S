@@ -51,13 +51,37 @@ multiboot_header:
 
 multiboot_entry:
 	 /* Initialize the stack pointer. */
-	 movl    $(stack + STACK_SIZE), %esp
+	 movl    $(stack-PAGE_OFFSET + STACK_SIZE), %esp
 	 
 	 /* Reset EFLAGS. */
 	 pushl   $0
 	 popf
 	 pushl %ebx
 	 pushl %eax
+	 	
+	// Activamos la paginación 
+	xorl %eax,%eax
+	movl $EXT_C(pgt1-PAGE_OFFSET),%edi  // Iniciamos la tabla de paginas 1  
+					                    // Mapeo 1:1 de memoria fisica y logica
+	movl $0x007,%eax		            // PRESENT+RW+USER 
+2:	stosl
+	add $0x1000,%eax
+	cmp $EXT_C(pgt2-PAGE_OFFSET),%edi  
+				           
+					
+	jne 2b
+	xorl %eax,%eax
+	movl $EXT_C(pgt2-PAGE_OFFSET),%edi  // Iniciamos la tabla de paginas 2
+					    // mapeando el kernel en la 
+                                            // direccion logica : 0xC00000000
+	movl $0x00100007,%eax		    // PRESENT+RW+USER 
+3:	stosl
+	add $0x1000,%eax
+	cmp $(empty_zero_page-PAGE_OFFSET),%edi
+	jne 3b
+	
+	
+		 	
 	 	
 	 // Fijamos la IDT y La GDT
 	 call EXT_C(setup_descriptors)
