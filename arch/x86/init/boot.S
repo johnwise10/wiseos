@@ -49,45 +49,15 @@ multiboot_header:
 	 .long   multiboot_entry
 #endif /* ! __ELF__ */
 
-
 multiboot_entry:
-	// Iniciamos el puntero de PILA  
-	movl	$(stack + STACK_SIZE), %esp
-
-	// Reseteamos EFLAGS
-	pushl	$0
-	popf
-
-	// Guardamos el puntero a de la "Multiboot information structure"
-	movl %ebx,mbi
-       
-        // Guardamos el valor Magico
-	movl %eax,mva
-	
-// Datos para inicializar el nucleo de forma adecuada
-mbi: 	.long  0x00000000
-mva: 	.long  0x00000000
-
-//	Aqui empieza el codigo en la dirección logica 0xC0000000
-.org SECTION_SETUP_SIZE
-
-.text
-
-kernel:
 	 /* Initialize the stack pointer. */
-	// movl    $(stack + STACK_SIZE), %esp
+	 movl    $(stack + STACK_SIZE), %esp
 	 
 	 /* Reset EFLAGS. */
-	// pushl   $0
-	// popf
-
-	// Ponemos el puntero de "Multiboot information structure" en la pila.  
-	movl (mbi),%ebx	
-	pushl %ebx
-
-	// Ponemos el "magic value" en la pila. 
-	movl (mva),%eax
-	pushl %eax
+	 pushl   $0
+	 popf
+	 pushl %ebx
+	 pushl %eax
 	 	
 	 // Fijamos la IDT y La GDT
 	 call EXT_C(setup_descriptors)
@@ -101,6 +71,12 @@ kernel:
 
 loop:   hlt
 	 jmp     loop
+	 
+	 
+//	Aqui empieza el codigo en la dirección logica 0xC0000000
+.org SECTION_SETUP_SIZE
+
+.text	 
 
 // Carga la tabla global de descriptores (GDT)
 ENTRY(EXT_C(setup_gdt))
