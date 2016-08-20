@@ -56,8 +56,12 @@ multiboot_entry:
 	 /* Reset EFLAGS. */
 	 pushl   $0
 	 popf
-	 pushl %ebx
-	 pushl %eax
+	 
+	// Guardamos el puntero a de la "Multiboot information structure"
+	movl %ebx,mbi
+       
+    // Guardamos el valor Magico
+	movl %eax,mva
 	 	
 	// Activamos la paginación 
 	xorl %eax,%eax
@@ -80,8 +84,42 @@ multiboot_entry:
 	cmp $(empty_zero_page-PAGE_OFFSET),%edi
 	jne 3b
 	
+	movl $EXT_C(pgdir-PAGE_OFFSET),%eax
+	movl %eax,%cr3			    // Fijamos la dirección fisica 
+					          // del directorio de páginas
+					    
+    movl %cr4,%ecx
+	orl  $0x0000010,%ecx
+	movl %ecx,%cr4
+				    
+	movl %cr0,%eax
+	orl $0x80000000,%eax
+	movl %eax,%cr0			    // Activamos la paginación
+	jmp 1f			            // Limpiamos la cola de instrucciones
+1:
+	movl $1f,%eax
+	jmp *%eax	
+
+
+// Datos para inicializar el nucleo de forma adecuada
+mbi: 	.long  0x00000000
+mva: 	.long  0x00000000
+
+.org SECTION_SETUP_SIZE // Vamos al final de la seccion setup
+
+//	Aqui empieza el codigo en la dirección logica 0xC0000000
+.text	 	
+1:
+	// Iniciamos el puntero de PILA  
+	movl	$(stack + STACK_SIZE), %esp	
 	
-		 	
+	// Ponemos el puntero de "Multiboot information structure" en la pila.  
+	movl (mbi),%ebx	
+	pushl %ebx
+
+	// Ponemos el "magic value" en la pila. 
+	movl (mva),%eax
+	pushl %eax
 	 	
 	 // Fijamos la IDT y La GDT
 	 call EXT_C(setup_descriptors)
@@ -148,10 +186,10 @@ rp_sidt:
 .org 0x1000-SECTION_SETUP_SIZE
 ENTRY(EXT_C(pgdir))
 
-	.long 0x00102007 // Entrada 0 apuntando a la pagina 1
+	.long 0x102083 // Entrada 0 apuntando a la pagina 1
 	.fill 768-1,4,0
 	/* default: 767 entries */
-	.long 0x00103007 // Entrada 768 apuntado a pagina 2 direccion 0XC0000000
+	.long 0x103083 // Entrada 768 apuntado a pagina 2 direccion 0XC0000000
 	/* default: 254 entries */
 	.fill 256-1,4,0
 
