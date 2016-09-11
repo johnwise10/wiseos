@@ -59,8 +59,7 @@ void show_multiboot_info (u32 addr){
   {
     multiboot_aout_symbol_table_t *multiboot_aout_sym = &(mbi->u.aout_sym);
 
-    printk ("multiboot_aout_symbol_table: tabsize = 0x%0x, "
-	 	   "strsize = 0x%x, addr = 0x%x\n",
+    printk ("multiboot_aout_symbol_table: tabsize = 0x%0x, strsize = 0x%x, addr = 0x%x\n",
 	 	   (unsigned) multiboot_aout_sym->tabsize,
 		   (unsigned) multiboot_aout_sym->strsize,
 		   (unsigned) multiboot_aout_sym->addr);
@@ -88,14 +87,16 @@ void show_multiboot_info (u32 addr){
 	 	(unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length;
 		mmap = (multiboot_memory_map_t *) ((unsigned long) mmap
 								 + mmap->size + sizeof (mmap->size)))
+								 {
 	printk (" size = 0x%x, base_addr = 0x%x%x,"
-     		 " length = 0x%x%x, type = 0x%x\n",
+     		" length = 0x%x%x, type = 0x%x\n",
 			 (unsigned) mmap->size,
-			 mmap->addr >> 32,
-			 mmap->addr & 0xffffffff,
-			 mmap->len >> 32,
-			 mmap->len & 0xffffffff,
-			 (unsigned) mmap->type);
+			 (unsigned long)mmap->addr >> 32,
+			 (unsigned long)mmap->addr & 0xffffffff,
+			 (unsigned long)mmap->len >> 32,
+			 (unsigned long)mmap->len & 0xffffffff,
+			 (unsigned) mmap->type); 
+	}		 
   }
 }
 
